@@ -5,8 +5,7 @@ namespace GameLibrary.Data.DataAccess;
 
 public class GameLibraryDataManager
 {
-    private const string ConnectionString =
-        "Server=(localdb)\\MSSQLLocalDB;Database=GameLibraryDB;Trusted_Connection=True;TrustServerCertificate=True;";
+    private const string ConnectionString = "Server=(localdb)\\ProjectModels;Database=GameLibraryDB;Trusted_Connection=True;TrustServerCertificate=True;";
 
     public List<Franchise> GetAllFranchises()
     {

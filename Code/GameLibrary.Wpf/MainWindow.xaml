@@ -1,9 +1,96 @@
 <Window x:Class="GameLibrary.Wpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Game Library Manager"
-        Height="450"
-        Width="800">
+        Title="Game Library Manager" Width="1280" Height="760"
+        MinWidth="1000" MinHeight="620" Background="#F4F7FB" FontFamily="Segoe UI">
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#375A9E" />
+        <SolidColorBrush x:Key="BorderBrush" Color="#D9E1EC" />
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="16,8" /><Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Background" Value="White" /><Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" /><Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource PrimaryBrush}" /><Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+        </Style>
+        <Style TargetType="TextBox"><Setter Property="Padding" Value="9,7" /><Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" /></Style>
+        <Style TargetType="ComboBox"><Setter Property="Padding" Value="7,5" /><Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" /></Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="True" /><Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="IsReadOnly" Value="True" /><Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="SelectionMode" Value="Single" /><Setter Property="RowHeaderWidth" Value="0" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+        </Style>
+    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="34" /></Grid.RowDefinitions>
+        <Border Background="#263B63" Padding="28,18">
+            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <StackPanel><TextBlock Text="Game Library Manager" FontSize="25" FontWeight="SemiBold" Foreground="White" />
+                    <TextBlock Text="Organize your games, franchises, and platforms in one place." Margin="0,4,0,0" Foreground="#D9E5FF" /></StackPanel>
+                <Border Grid.Column="1" Background="#385785" CornerRadius="14" Padding="13,6" VerticalAlignment="Center"><TextBlock Text="Local Database" Foreground="White" FontWeight="SemiBold" /></Border>
+            </Grid>
+        </Border>
+        <TabControl Grid.Row="1" Margin="24,20,24,16" BorderThickness="0" Background="Transparent">
+            <TabItem Header="Games">
+                <Grid Margin="0,14,0,0"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel><TextBlock Text="Games" FontSize="23" FontWeight="SemiBold" Foreground="#202B3D" /><TextBlock Text="Search by title or franchise, then select a row to edit or delete." Foreground="#667085" Margin="0,3,0,0" /></StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"><Button Content="Load Games" Click="LoadGames_Click" /><Button Content="New Game" Click="NewGame_Click" Style="{StaticResource PrimaryButton}" Margin="0" /></StackPanel>
+                    </Grid>
+                    <Border Grid.Row="1" Margin="0,18,0,14" Padding="15" Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6">
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="180" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox x:Name="GameSearchTextBox" ToolTip="Enter a title or franchise name" />
+                            <ComboBox x:Name="GameSearchTypeComboBox" Grid.Column="1" Margin="12,0" SelectedIndex="0"><ComboBoxItem Content="Search by title" /><ComboBoxItem Content="Search by franchise" /></ComboBox>
+                            <Button Grid.Column="2" Content="Search" Click="SearchGames_Click" Style="{StaticResource PrimaryButton}" Margin="0" />
+                        </Grid>
+                    </Border>
+                    <Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="280" /></Grid.ColumnDefinitions>
+                        <DataGrid x:Name="GamesDataGrid" SelectionChanged="GamesDataGrid_SelectionChanged" />
+                        <Border Grid.Column="1" Margin="16,0,0,0" Padding="18" Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6">
+                            <StackPanel><TextBlock Text="Game Details" FontWeight="SemiBold" FontSize="17" /><TextBlock Text="Fill in the fields, then save a new game or update the selected game." TextWrapping="Wrap" Foreground="#667085" Margin="0,6,0,18" />
+                                <TextBlock Text="Title" FontWeight="SemiBold" /><TextBox x:Name="GameTitleTextBox" Margin="0,5,0,10" />
+                                <TextBlock Text="Release Year" FontWeight="SemiBold" /><TextBox x:Name="GameReleaseYearTextBox" Margin="0,5,0,10" />
+                                <TextBlock Text="Franchise" FontWeight="SemiBold" /><ComboBox x:Name="GameFranchiseComboBox" DisplayMemberPath="FranchiseName" SelectedValuePath="FranchiseId" Margin="0,5,0,10" />
+                                <TextBlock Text="Platform" FontWeight="SemiBold" /><ComboBox x:Name="GamePlatformComboBox" DisplayMemberPath="PlatformName" SelectedValuePath="PlatformId" Margin="0,5,0,18" />
+                                <Button Content="Save New Game" Click="SaveGame_Click" Style="{StaticResource PrimaryButton}" Margin="0,0,0,8" /><Button Content="Delete Selected Game" Click="DeleteGame_Click" Foreground="#B42318" Margin="0" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Franchises">
+                <Grid Margin="0,14,0,0"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Franchises" FontSize="23" FontWeight="SemiBold" /><TextBlock Text="Create, update, and remove franchises." Foreground="#667085" Margin="0,3,0,0" /></StackPanel><StackPanel Grid.Column="1" Orientation="Horizontal"><Button Content="Load Franchises" Click="LoadFranchises_Click" /><Button Content="New Franchise" Click="NewFranchise_Click" Style="{StaticResource PrimaryButton}" Margin="0" /></StackPanel></Grid>
+                    <Grid Grid.Row="1" Margin="0,20,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="320" /></Grid.ColumnDefinitions><DataGrid x:Name="FranchisesDataGrid" SelectionChanged="FranchisesDataGrid_SelectionChanged" />
+                        <Border Grid.Column="1" Margin="16,0,0,0" Padding="18" Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6"><StackPanel><TextBlock Text="Franchise Details" FontWeight="SemiBold" FontSize="17" /><TextBlock Text="Save a new franchise or update the selected one." Foreground="#667085" Margin="0,5,0,20" /><TextBlock Text="Franchise Name" FontWeight="SemiBold" /><TextBox x:Name="FranchiseNameTextBox" Margin="0,5,0,15" /><TextBlock Text="Publisher" FontWeight="SemiBold" /><TextBox x:Name="FranchisePublisherTextBox" Margin="0,5,0,20" /><Button Content="Save Franchise" Click="SaveFranchise_Click" Style="{StaticResource PrimaryButton}" Margin="0,0,0,8" /><Button Content="Delete Selected Franchise" Click="DeleteFranchise_Click" Foreground="#B42318" Margin="0" /></StackPanel></Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Platforms">
+                <Grid Margin="0,14,0,0"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Platforms" FontSize="23" FontWeight="SemiBold" /><TextBlock Text="Create, update, and remove game platforms." Foreground="#667085" Margin="0,3,0,0" /></StackPanel><StackPanel Grid.Column="1" Orientation="Horizontal"><Button Content="Load Platforms" Click="LoadPlatforms_Click" /><Button Content="New Platform" Click="NewPlatform_Click" Style="{StaticResource PrimaryButton}" Margin="0" /></StackPanel></Grid>
+                    <Grid Grid.Row="1" Margin="0,20,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="320" /></Grid.ColumnDefinitions><DataGrid x:Name="PlatformsDataGrid" SelectionChanged="PlatformsDataGrid_SelectionChanged" />
+                        <Border Grid.Column="1" Margin="16,0,0,0" Padding="18" Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6"><StackPanel><TextBlock Text="Platform Details" FontWeight="SemiBold" FontSize="17" /><TextBlock Text="Save a new platform or update the selected one." Foreground="#667085" Margin="0,5,0,20" /><TextBlock Text="Platform Name" FontWeight="SemiBold" /><TextBox x:Name="PlatformNameTextBox" Margin="0,5,0,15" /><TextBlock Text="Manufacturer" FontWeight="SemiBold" /><TextBox x:Name="PlatformManufacturerTextBox" Margin="0,5,0,20" /><Button Content="Save Platform" Click="SavePlatform_Click" Style="{StaticResource PrimaryButton}" Margin="0,0,0,8" /><Button Content="Delete Selected Platform" Click="DeletePlatform_Click" Foreground="#B42318" Margin="0" /></StackPanel></Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Administration">
+                <Grid Margin="0,14,0,0"><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Administration" FontSize="23" FontWeight="SemiBold" /><TextBlock Text="Admin-only record area: manage the Platforms table here as well." Foreground="#667085" Margin="0,3,0,0" /></StackPanel><Button Grid.Column="1" Content="Load Platforms" Click="LoadAdminPlatforms_Click" Margin="0" VerticalAlignment="Center" /></Grid>
+                    <Grid Grid.Row="1" Margin="0,20,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="320" /></Grid.ColumnDefinitions><DataGrid x:Name="AdminPlatformsDataGrid" SelectionChanged="AdminPlatformsDataGrid_SelectionChanged" />
+                        <Border Grid.Column="1" Margin="16,0,0,0" Padding="18" Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6"><StackPanel><TextBlock Text="Manage Platforms" FontSize="17" FontWeight="SemiBold" /><TextBlock Text="No login is needed for this assignment; this separate view represents the admin-only area." TextWrapping="Wrap" Foreground="#667085" Margin="0,6,0,20" /><TextBlock Text="Platform Name" FontWeight="SemiBold" /><TextBox x:Name="AdminPlatformNameTextBox" Margin="0,5,0,15" /><TextBlock Text="Manufacturer" FontWeight="SemiBold" /><TextBox x:Name="AdminPlatformManufacturerTextBox" Margin="0,5,0,20" /><Button Content="Save Platform" Click="SaveAdminPlatform_Click" Style="{StaticResource PrimaryButton}" Margin="0,0,0,8" /><Button Content="Delete Selected Platform" Click="DeleteAdminPlatform_Click" Foreground="#B42318" Margin="0,0,0,8" /><Button Content="New Platform" Click="NewAdminPlatform_Click" Margin="0" /></StackPanel></Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings">
+                <Grid Margin="0,14,0,0"><StackPanel MaxWidth="680" HorizontalAlignment="Left"><TextBlock Text="Settings" FontSize="23" FontWeight="SemiBold" /><TextBlock Text="Choose how the application looks and behaves." Foreground="#667085" Margin="0,3,0,20" />
+                    <Border Padding="22" Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions><TextBlock Text="Appearance" FontWeight="SemiBold" FontSize="17" /><Grid Grid.Row="1" Margin="0,16,0,16"><Grid.ColumnDefinitions><ColumnDefinition Width="180" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions><TextBlock Text="Color theme" VerticalAlignment="Center" /><ComboBox x:Name="ThemeComboBox" Grid.Column="1" SelectedIndex="0"><ComboBoxItem Content="Light" /><ComboBoxItem Content="Dark" /></ComboBox></Grid><CheckBox x:Name="ConfirmDeleteCheckBox" Grid.Row="2" Content="Confirm before deleting a record" IsChecked="True" /></Grid></Border>
+                    <Button Content="Save Settings" Click="SaveSettings_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,18,0,0" />
+                </StackPanel></Grid>
+            </TabItem>
+        </TabControl>
+        <Border Grid.Row="2" Background="#E8EEF7" Padding="24,0"><DockPanel><TextBlock x:Name="StatusTextBlock" Text="Ready" VerticalAlignment="Center" Foreground="#4B5C77" /><TextBlock DockPanel.Dock="Right" Text="Game Library Manager" VerticalAlignment="Center" Foreground="#4B5C77" /></DockPanel></Border>
     </Grid>
 </Window>
